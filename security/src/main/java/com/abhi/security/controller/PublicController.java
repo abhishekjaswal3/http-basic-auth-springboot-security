@@ -4,6 +4,7 @@ import com.abhi.security.dto.UserDto;
 import com.abhi.security.entity.User;
 import com.abhi.security.service.CustomUserDetailServiceSecurity;
 import com.abhi.security.service.UserService;
+import com.abhi.security.utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,9 @@ public class PublicController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -41,7 +45,7 @@ public class PublicController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Sign up is complete please login now");
     }
 
-    /*@PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
         try{
             authenticationManager.authenticate(
@@ -50,10 +54,9 @@ public class PublicController {
             String jwt = jwtUtil.generateToken(userDetails.getUsername());
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         }catch (Exception e){
-            log.error("Exception occurred while createAuthenticationToken ", e);
+           // log.error("Exception occurred while createAuthenticationToken ", e);
             return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
     }
-*/
 
 }

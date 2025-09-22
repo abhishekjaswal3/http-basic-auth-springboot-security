@@ -1,5 +1,6 @@
 package com.abhi.security.config;
 
+import com.abhi.security.filter.JwtFilter;
 import com.abhi.security.service.CustomUserDetailServiceSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,28 +41,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailServiceSecurity userDetailsService;
 
+    @Autowired
+    JwtFilter jwtFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/user/above-all").hasRole("ADMIN")
                 .antMatchers("/user/**").authenticated()
-              //  .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()
-                .httpBasic();
-        //JSessionId won't work here if we try to pass it in header as it is stateless and no data is stored,below is a sample curl:
-      /*  curl --location 'localhost:8080/abhi/user/hello' \
-        --header 'cookie: JSESSIONID=C247D1B9A9472E28F04AFA195E138232; JSESSIONID=C247D1B9A9472E28F04AFA195E138232'*/
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
+                .anyRequest().permitAll();
+                //.and().httpBasic();
 
-        //JSESSIONID will work here ,above curl will work,JSESSIONID gets returned in response as cookie when basic auth is successful for the first time
-       // http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and().csrf().disable();
-    }
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
+        //JWT implemented -check for jwt token before it goes to controller,basically jwt filter will work before this
+        //UsernamePasswordAuthenticationFilter as we have removed basic authentication
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+ }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
+
 
    /* @Bean
     public PasswordEncoder passwordEncoder() {
