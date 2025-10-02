@@ -1,0 +1,47 @@
+Why we use OpenSSL to generate RSA keys
+
+Industry-standard tool
+
+OpenSSL is one of the most widely used libraries for cryptography (TLS, HTTPS, JWT signing, etc.).
+
+It’s trusted, battle-tested, and follows the correct cryptographic standards (PKCS#1, PKCS#8, X.509, etc.).
+
+Correct format for interoperability
+ō
+When you generate RSA keys, they must be stored in standard formats (like PEM or DER) so that they can be read by other systems (Java, Python, Node.js, Spring Security, OAuth2 providers, etc.).
+
+OpenSSL outputs keys in PEM format by default, which is the most portable.
+
+Reusability
+
+If you generate keys once with OpenSSL, you can use the same pair in:
+
+Your Spring Boot app (signing JWTs)
+
+API Gateway / microservices (verifying JWTs)
+
+Other tools like Postman / Curl for testing.
+
+Separation of concerns
+
+The private key stays secure on the server (used only for signing).
+
+The public key can be shared widely (so clients and services can verify signatures).
+
+OpenSSL helps create this pair in a secure way.
+
+Flexibility
+
+With OpenSSL you can:
+
+Generate keys of different sizes (2048, 3072, 4096 bits).
+
+Convert between formats (PEM, DER, PKCS12, JKS).
+
+Extract public key from private key.
+
+Inspect and debug your keys.
+
+Portability between environments
+
+Keys generated with OpenSSL can be easily imported into Java (KeyFactory), Node.js (crypto), or Python (cryptography).
