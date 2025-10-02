@@ -16,7 +16,13 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private  PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
+    private  PasswordEncoder passwordEncoder = new Argon2PasswordEncoder(
+            16,     // salt length
+            32,     // hash length
+            1,      // parallelism
+            1 << 13, // memory = 8192 KB (8 MB)
+            3       // iterations
+    );
     public void saveNewUser(User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));

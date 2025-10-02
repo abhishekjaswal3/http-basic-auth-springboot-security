@@ -2,12 +2,12 @@ package com.abhi.security.entity;
 
 
 import com.abhi.security.utility.ListToStringConverter;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Data

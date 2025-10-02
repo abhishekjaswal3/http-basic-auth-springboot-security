@@ -18,6 +18,28 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
+    /**
+     * Another implementation for HS256
+     *
+     *  private SecretKey getKey() {
+     *         byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+     *         return Keys.hmacShaKeyFor(keyBytes);
+     *     }
+     *
+     *     private String secretkey = "";
+     *
+     *     public JwtUtil() {
+     *
+     *         try {
+     *             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
+     *             SecretKey sk = keyGen.generateKey();
+     *             secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
+     *         } catch (NoSuchAlgorithmException e) {
+     *             throw new RuntimeException(e);
+     *         }
+     *     }
+     */
+
     Path privateKeyPath = Paths.get("src/main/resources/keys/private.pem");
     Path publicKeyPath = Paths.get("src/main/resources/keys/public.pem");
     PrivateKey privateKey = PemUtils.readPrivateKey(privateKeyPath); //for RS256
